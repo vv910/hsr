@@ -1,0 +1,138 @@
+ Pandas + Matplotlib 基础作图：
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 生成数据
+x = np.linspace(0, 2*np.pi, 100)
+df = pd.DataFrame({
+    'x': x,
+    'sin(x)': np.sin(x),
+    'cos(x)': np.cos(x)
+})
+
+# 创建画布
+plt.figure(figsize=(10, 6), dpi=100)
+
+# 通过DataFrame直接绘图
+df.plot(x='x', y=['sin(x)', 'cos(x)'], 
+        style=['-r', '--b'], 
+        linewidth=2,
+        ax=plt.gca())
+
+# 科学作图格式设置
+plt.title('Trigonometric Functions (Pandas)', fontsize=14)
+plt.xlabel('x [rad]', fontsize=12)
+plt.ylabel('f(x)', fontsize=12)
+plt.grid(True, linestyle=':', alpha=0.7)
+plt.axhline(y=0, color='k', linewidth=0.5)
+plt.axvline(x=0, color='k', linewidth=0.5)
+plt.legend(loc='upper right', frameon=True)
+plt.tight_layout()
+
+plt.savefig('pandas_plot.png', bbox_inches='tight')
+plt.show()
+
+
+
+Matplotlib 高级科学作图：
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 生成数据
+x = np.linspace(0, 2*np.pi, 100)
+y_sin = np.sin(x)
+y_cos = np.cos(x)
+
+# 创建专业科学图表
+fig, ax = plt.subplots(figsize=(10, 6), dpi=100)
+
+# 绘制曲线
+ax.plot(x, y_sin, 'r-',  label='sin(x)', linewidth=2, alpha=0.8)
+ax.plot(x, y_cos, 'b--', label='cos(x)', linewidth=2, dashes=(5, 2))
+
+# 设置科学图表元素
+ax.set_title('Trigonometric Functions (Matplotlib)', fontsize=14, pad=20)
+ax.set_xlabel('Phase [rad]', fontsize=12)
+ax.set_ylabel('Amplitude', fontsize=12)
+ax.tick_params(axis='both', which='major', labelsize=10)
+
+# 特殊标记
+ax.scatter([np.pi/2, 3*np.pi/2], [1, -1], s=80, 
+           facecolors='none', edgecolors='g', 
+           zorder=3, label='Extrema')
+ax.annotate('Zero Crossing', xy=(np.pi, 0), xytext=(np.pi+0.5, 0.3),
+            arrowprops=dict(arrowstyle="->", color='gray'))
+
+# 辅助元素
+ax.grid(True, linestyle='--', alpha=0.6)
+ax.axhline(0, color='k', linewidth=0.8)
+ax.axvline(0, color='k', linewidth=0.8)
+ax.legend(loc='lower left', framealpha=0.9)
+
+# 坐标轴范围
+ax.set_xlim(0, 2*np.pi)
+ax.set_ylim(-1.1, 1.1)
+
+# 保存高清图像
+plt.savefig('matplotlib_plot.png', dpi=300, bbox_inches='tight')
+plt.show()
+
+
+Plotly 交互式科学作图：
+import plotly.graph_objects as go
+import numpy as np
+
+# 生成数据
+x = np.linspace(0, 2*np.pi, 100)
+y_sin = np.sin(x)
+y_cos = np.cos(x)
+
+# 创建交互式图表
+fig = go.Figure()
+
+# 添加轨迹
+fig.add_trace(go.Scatter(
+    x=x, y=y_sin,
+    mode='lines',
+    name='sin(x)',
+    line=dict(color='red', width=2),
+    hovertemplate="x: %{x:.2f}<br>y: %{y:.2f}"
+))
+
+fig.add_trace(go.Scatter(
+    x=x, y=y_cos,
+    mode='lines+markers',
+    name='cos(x)',
+    line=dict(color='blue', width=2, dash='dash'),
+    marker=dict(symbol='circle-open', size=6, color='blue'),
+    hovertemplate="x: %{x:.2f}<br>y: %{y:.2f}"
+))
+
+# 科学图表布局设置
+fig.update_layout(
+    title='Trigonometric Functions (Plotly)',
+    xaxis_title='Phase [rad]',
+    yaxis_title='Amplitude',
+    template='plotly_white',
+    hovermode='x unified',
+    height=600,
+    annotations=[
+        dict(x=np.pi, y=0, text="Zero Point", 
+             showarrow=True, arrowhead=2, ax=-50, ay=-30)
+    ]
+)
+
+# 辅助元素
+fig.update_xaxes(
+    showgrid=True, gridwidth=1, gridcolor='LightGrey',
+    zeroline=True, zerolinecolor='Gray', zerolinewidth=1
+)
+fig.update_yaxes(
+    showgrid=True, gridwidth=1, gridcolor='LightGrey',
+    zeroline=True, zerolinecolor='Gray', zerolinewidth=1
+)
+
+# 保存为HTML交互文件
+fig.write_html('plotly_interactive.html')
+fig.show()
